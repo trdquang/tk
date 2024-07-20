@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebration Effect</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .celebrate-button {
+            transition: transform 0.3s ease;
+            /* Thêm hiệu ứng chuyển đổi */
+        }
+
+
+        .celebrate-button:hover {
+            background-color: #ff1f43;
+        }
+
+        .confetti {
+            width: 10px;
+            height: 10px;
+            background-color: #f0a500;
+            /* Màu sắc confetti */
+            position: absolute;
+            top: 0;
+            animation: confetti-fall 2s ease-out infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotateZ(0deg);
+            }
+
+            100% {
+                transform: translateY(100vh) rotateZ(360deg);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container text-center">
+        <h2 id="main-heading" style="color: aqua;">Đi chơi hong em gái !!!</h2>
+        <button type="button" class="btn btn-danger celebrate-button" id="hong-button">Hong</button>
+        <button type="button" class="btn btn-success celebrate-button" id="okeeee-button">Okeeee</button>
+
+        <div id="confetti-container"></div>
+
+    </div>
+
+    <!-- Bootstrap JS Bundle (popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var currentSizeIndex = 0; // Biến để theo dõi số lần phóng to
+        var hongCount = 0; // Biến để đếm số lần nhấn nút Hong
+        var okeeeClicked = false; // Biến để kiểm tra xem đã nhấn nút Okeeee chưa
+        var mainHeading = document.getElementById('main-heading');
+        var hongButton = document.getElementById('hong-button');
+        var okeeeeButton = document.getElementById('okeeee-button');
+        var originalSize = parseFloat(window.getComputedStyle(okeeeeButton).fontSize);
+
+        hongButton.addEventListener('click', function () {
+            hongCount++;
+
+            // Nếu nhấn "hong" lần thứ 4 trở lên
+            if (hongCount >= 4) {
+                
+                mainHeading.textContent = "okeee hen kakaka";
+                celebrate();
+            }
+
+            // Lấy kích thước hiện tại của nút "okeeee"
+            var currentSize = parseFloat(window.getComputedStyle(okeeeeButton).fontSize);
+            var newSize = currentSize * 1.5; // Tăng kích thước lên 1.5 lần
+
+            // Giới hạn kích thước mới không vượt quá 3 lần kích thước ban đầu
+            if (newSize <= originalSize * 3) {
+                okeeeeButton.style.fontSize = newSize + 'px';
+            } else {
+                okeeeeButton.style.fontSize = originalSize * 3 + 'px';
+            }
+        });
+
+        okeeeeButton.addEventListener('click', function () {
+            // Nếu là lần click đầu tiên vào nút "okeeee"
+            if (hongCount >= 0) {
+                mainHeading.textContent = "okeee hen kakaka";
+                celebrate();
+            }
+        });
+
+        function celebrate() {
+            // Tạo hoa confetti
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animationDelay = `${Math.random()}s`;
+                document.getElementById('confetti-container').appendChild(confetti);
+
+                // Xóa hoa confetti sau khi hoàn thành hiệu ứng
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+
+            // Nếu chưa hiển thị thông điệp chúc mừng
+            if (!okeeeClicked) {
+                // Hiển thị thông điệp chúc mừng
+                var message = document.getElementById('message');
+                message.classList.remove('hidden');
+                okeeeClicked = true; // Đánh dấu đã nhấn nút Okeeee
+            }
+        }
+    </script>
+</body>
+
+</html>
